@@ -6,7 +6,10 @@ const ping: Command = {
     .setName("ping")
     .setDescription("Replies with pong"),
   async execute(interaction) {
-    await interaction.reply("Pong");
+    const msPassed = Date.now() - interaction.createdTimestamp;
+
+    const pongMessage = `Pong, latency: ${msPassed} ms, Bot's ping: ${interaction.client.ws.ping}`;
+    await interaction.reply({ content: pongMessage, ephemeral: true });
   },
 };
 
