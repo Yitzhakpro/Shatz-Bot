@@ -3,6 +3,7 @@ import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import { globPromise } from "../utils";
 import { Command } from "../types";
+import { logger } from "../logger";
 
 export class ShatzBotClient extends Client {
   commands: Collection<string, Command> = new Collection();
@@ -26,12 +27,12 @@ export class ShatzBotClient extends Client {
 
         this.commands.set(command.data.name, command);
       });
-    } catch (err) {
-      console.log("[ERROR] could not load commands");
+
+      this.registerCommands();
+    } catch (error) {
+      logger.error(error, "Could not load commands");
       process.exit(1);
     }
-
-    this.registerCommands();
   }
 
   registerCommands() {
@@ -50,8 +51,12 @@ export class ShatzBotClient extends Client {
       .put(Routes.applicationGuildCommands(appId, guildId), {
         body: commands,
       })
-      .then(() => console.log("[INFO] Registered application commands"))
-      .catch(console.error);
+      .then(() => {
+        logger.info("Registered bot commands");
+      })
+      .catch((error) => {
+        logger.error(error, "Could not register bot commands");
+      });
   }
 
   async start() {
