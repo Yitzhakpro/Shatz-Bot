@@ -5,6 +5,7 @@ declare global {
     interface ProcessEnv {
       botToken: string;
       guildId: string;
+      appId: string;
       enviroment: "dev" | "prod" | "debug";
     }
   }
