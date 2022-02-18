@@ -1,6 +1,4 @@
 import "dotenv/config";
-import { ShatzBotClient } from "./client";
+import { shatzBot } from "./loaders";
 
-const bot = new ShatzBotClient();
-
-bot.start();
+shatzBot.start();
