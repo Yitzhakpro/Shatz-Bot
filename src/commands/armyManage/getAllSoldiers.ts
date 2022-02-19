@@ -15,7 +15,7 @@ const getAllSoldierPermissions = JSON.parse(process.env.armyManageUserIds!).map(
 
 const getAllSoldiers: Command = {
   data: new SlashCommandBuilder()
-    .setName("getallsoldiers")
+    .setName("get-all-soldiers")
     .setDescription("Returns all soldiers in the system")
     .setDefaultPermission(false),
   userPermission: getAllSoldierPermissions,

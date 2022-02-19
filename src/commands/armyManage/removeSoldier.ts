@@ -15,7 +15,7 @@ const removeSoldierPermissions = JSON.parse(process.env.armyManageUserIds!).map(
 
 const removeSoldier: Command = {
   data: new SlashCommandBuilder()
-    .setName("removesoldier")
+    .setName("remove-soldier")
     .setDescription("Removes soldier from the system")
     .setDefaultPermission(false)
     .addUserOption((option) =>
