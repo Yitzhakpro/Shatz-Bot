@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import { MessageEmbed } from "discord.js";
 import { getRepository } from "typeorm";
 import { Soldier } from "../../entities";
 import { Command } from "../../types";
@@ -41,24 +42,32 @@ const pazamBattle: Command = {
       });
     }
 
-    let battleResultString = `
-      מלחמת פז"מ:
-      יוצר: ${initiatedUserDiscord}
-      אויב: ${opponentDiscord}
-
-    `;
+    const battleResultEmbed = new MessageEmbed()
+      .setColor("#0099ff")
+      .setTitle('מלחמת פז"מ')
+      .setAuthor({ name: 'מלך הפז"מ' })
+      .setDescription('מישהו אולי יעלה משפט פז"מ פה...')
+      .addFields(
+        {
+          name: "משתתף 1:",
+          value: initiatedUserInfo.name,
+          inline: true,
+        },
+        { name: "משתתף 2:", value: opponentInfo.name, inline: true }
+      )
+      .setTimestamp();
     const ownDraftDate = new Date(initiatedUserInfo.draftDate);
     const opponentDraftDate = new Date(opponentInfo.draftDate);
 
     if (ownDraftDate < opponentDraftDate) {
-      battleResultString += `מנצח: ${initiatedUserDiscord}`;
+      battleResultEmbed.addField("מנצח: ", initiatedUserInfo.name);
     } else if (ownDraftDate > opponentDraftDate) {
-      battleResultString += `מנצח: ${opponentDiscord}`;
+      battleResultEmbed.addField("מנצח: ", opponentInfo.name);
     } else {
-      battleResultString += `תיקו!!!`;
+      battleResultEmbed.addField("תוצאה: ", `תיקו!!!`);
     }
 
-    await interaction.reply(battleResultString);
+    await interaction.reply({ embeds: [battleResultEmbed] });
   },
 };
 
