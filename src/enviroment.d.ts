@@ -7,6 +7,9 @@ declare global {
       guildId: string;
       appId: string;
       armyManageUserIds: string;
+
+      DATABASE_URL: string;
+
       enviroment: "dev" | "prod" | "debug";
     }
   }
