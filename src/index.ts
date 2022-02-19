@@ -1,5 +1,12 @@
 import "dotenv/config";
-import "reflect-metadata";
-import { shatzBot } from "./loaders";
+import { connectToDb, shatzBot } from "./loaders";
+import { logger } from "./logger";
 
-shatzBot.start();
+connectToDb()
+  .then(() => {
+    logger.info("Connected to DB.");
+    shatzBot.start();
+  })
+  .catch((error) => {
+    logger.error(error, "Failed to connect to DB");
+  });
