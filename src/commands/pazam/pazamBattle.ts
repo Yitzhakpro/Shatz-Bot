@@ -16,14 +16,16 @@ const pazamBattle: Command = {
   async execute(interaction) {
     const soldierRepository = getRepository(Soldier);
 
-    const initiatedUserId = interaction.member?.user.id;
-    const opponentId = interaction.options.getUser("opponent")?.id;
+    const initiatedUserDiscord = interaction.member?.user;
+    const initiatedUserId = initiatedUserDiscord?.id;
+    const opponentDiscord = interaction.options.getUser("opponent");
+    const opponentId = opponentDiscord?.id;
 
-    const initiatedUser = await soldierRepository.findOne({
+    const initiatedUserInfo = await soldierRepository.findOne({
       id: initiatedUserId,
     });
 
-    if (!initiatedUser) {
+    if (!initiatedUserInfo) {
       return await interaction.reply({
         content: "Please ask an admin to add your info to the system",
         ephemeral: true,
@@ -39,28 +41,24 @@ const pazamBattle: Command = {
       });
     }
 
-    const ownDraftDate = new Date(initiatedUser.draftDate);
+    let battleResultString = `
+      מלחמת פז"מ:
+      יוצר: ${initiatedUserDiscord}
+      אויב: ${opponentDiscord}
+
+    `;
+    const ownDraftDate = new Date(initiatedUserInfo.draftDate);
     const opponentDraftDate = new Date(opponentInfo.draftDate);
 
     if (ownDraftDate < opponentDraftDate) {
-      await interaction.reply(
-        `${interaction.member?.user} defeted ${interaction.options.getUser(
-          "opponent"
-        )} in pazam battle`
-      );
+      battleResultString += `מנצח: ${initiatedUserDiscord}`;
     } else if (ownDraftDate > opponentDraftDate) {
-      await interaction.reply(
-        `${interaction.member?.user} lost to ${interaction.options.getUser(
-          "opponent"
-        )} in pazam battle`
-      );
+      battleResultString += `מנצח: ${opponentDiscord}`;
     } else {
-      await interaction.reply(
-        `${
-          interaction.member?.user
-        } has the same PAZAM as ${interaction.options.getUser("opponent")}`
-      );
+      battleResultString += `תיקו!!!`;
     }
+
+    await interaction.reply(battleResultString);
   },
 };
 
