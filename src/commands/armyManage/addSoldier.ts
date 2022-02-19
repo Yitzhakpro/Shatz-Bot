@@ -15,7 +15,7 @@ const addSoldierPermissions = JSON.parse(process.env.armyManageUserIds!).map(
 
 const addsoldier: Command = {
   data: new SlashCommandBuilder()
-    .setName("addsoldier")
+    .setName("add-soldier")
     .setDescription("Adds soldier to the system")
     .setDefaultPermission(false)
     .addUserOption((option) =>
