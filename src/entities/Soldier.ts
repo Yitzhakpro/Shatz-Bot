@@ -1,14 +1,13 @@
 import { Entity, Column, PrimaryColumn } from "typeorm";
-import { nanoid } from "nanoid";
 
 @Entity({ name: "Soldiers" })
 export class Soldier {
-  @PrimaryColumn({ default: nanoid() })
+  @PrimaryColumn()
   id: string;
 
   @Column()
   name: string;
 
   @Column("date")
-  draftDate: Date;
+  draftDate: string;
 }
