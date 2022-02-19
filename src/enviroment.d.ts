@@ -6,6 +6,7 @@ declare global {
       botToken: string;
       guildId: string;
       appId: string;
+      armyManageUserIds: string;
       enviroment: "dev" | "prod" | "debug";
     }
   }
