@@ -97,6 +97,7 @@ export class ShatzBotClient extends Client {
 
   async start() {
     await this.registerModules();
-    this.login(process.env.botToken);
+    await this.login(process.env.botToken);
+    this.user?.setActivity('פז"מ עולם', { type: "COMPETING" });
   }
 }
