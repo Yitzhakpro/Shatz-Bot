@@ -1,4 +1,8 @@
-import { Client, Collection } from "discord.js";
+import {
+  Client,
+  Collection,
+  GuildApplicationCommandPermissionData,
+} from "discord.js";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import { globPromise } from "../utils";
@@ -83,6 +87,37 @@ export class ShatzBotClient extends Client {
       });
   }
 
+  async registerPermissions() {
+    const guild = this.guilds.cache.get(process.env.guildId!);
+    const commands = await guild?.commands.fetch();
+
+    if (!commands) {
+      logger.error("Could find any commands");
+      process.exit(1);
+    }
+
+    const fullPermissions: GuildApplicationCommandPermissionData[] = [];
+
+    for (const cmd of commands) {
+      const cmdId = cmd[0];
+      const cmdData = cmd[1];
+      const needPermissions = !cmdData.defaultPermission;
+
+      if (needPermissions) {
+        const shatzCmd = this.commands.get(cmdData.name);
+        const shatzCmdPerms = shatzCmd?.userPermission;
+
+        fullPermissions.push({ id: cmdId, permissions: shatzCmdPerms });
+      }
+    }
+
+    await this.guilds.cache
+      .get(process.env.guildId!)
+      ?.commands.permissions.set({ fullPermissions });
+
+    logger.info("Registered bot commands permissions");
+  }
+
   registerEvents() {
     this.events.forEach((event) => {
       if (event.once) {
@@ -98,6 +133,8 @@ export class ShatzBotClient extends Client {
   async start() {
     await this.registerModules();
     await this.login(process.env.botToken);
+    // TODO: reset perms every new startup
+    await this.registerPermissions();
     this.user?.setActivity('פז"מ עולם', { type: "COMPETING" });
   }
 }
